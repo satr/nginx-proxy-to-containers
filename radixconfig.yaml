@@ -1,0 +1,34 @@
+apiVersion: radix.equinor.com/v1
+kind: RadixApplication
+metadata:
+  name: nginx-proxy-to-containers
+spec:
+  environments:
+    - name: dev
+      build:
+        from: main
+  components:
+    - name: proxy
+      src: proxy
+      publicPort: http
+      ports:
+        - name: http
+          port: 8088
+    - name: backend
+      src: backend
+      publicPort: http
+      ports:
+        - name: http
+          port: 8001
+        - name: files
+          port: 8002
+      environmentConfig:
+        - environment: dev
+          volumeMounts:
+            - type: blob
+              name: storage1
+              container: blobfusevolumetestdata
+              path: /app/image-storage
+  dnsAppAlias:
+    environment: dev
+    component: proxy

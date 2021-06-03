@@ -1,0 +1,14 @@
+version: "3.5"
+
+services:
+  backend:
+    build:
+      context: backend
+    ports:
+      - "8001:8001"
+      - "8002:8002"
+  proxy:
+    build:
+      context: proxy
+    ports:
+      - "8088:8088"
